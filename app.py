@@ -5,7 +5,6 @@ from functools import lru_cache
 import glob
 import os
 from pymongo import MongoClient
-import ollama
 import markdown
 import re
 
@@ -15,37 +14,10 @@ app = Flask(__name__)
 mongo = MongoClient("mongodb://localhost:27017/")
 db = mongo["dominionabyss"]       
 cards = db.cards
-
-# Your chosen Ollama model
-OLLAMA_MODEL = "llama3.1:latest"       
+       
 # Convert slug to readable name
 def slug_to_name(slug):
     return slug.replace('-', ' ').title()
-
-
-
-# Function to generate strategy text via Ollama
-def generate_strategy(card_data):
-    prompt = f"""
-You are a Dominion strategy expert. Please write a clear, helpful, approximately 1500 word strategy guide for this card.
-
-Card details:
-Name: {card_data['card_name']}
-Set: {card_data['set_name']}
-Cost: {card_data.get('cost')}
-Type: {card_data.get('type')}
-Rules text: {card_data.get('card_text')}
-
-Focus on how to use this card well in Dominion games, combos, counters, and considerations.
-"""
-    response = ollama.chat(
-        model=OLLAMA_MODEL,
-        messages=[
-            {"role": "system", "content": "You are a helpful Dominion strategy writer."},
-            {"role": "user", "content": prompt}
-        ]
-    )
-    return response['message']['content'].strip()
 
 
 # Route to view card page (cached for 10 minutes)
