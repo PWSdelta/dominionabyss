@@ -66,7 +66,6 @@ coverage.xml
 Thumbs.db
 
 # Static/media cache
-static/card-front-images/*/*.jpg
 !static/card-front-images/README.md
 !static/card-front-images/LICENSE
 !static/card-front-images/*/*.md
