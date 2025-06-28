@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Unanalyzed Dominion Cards{% endblock %}
+
+{% block content %}
+<h1>Unanalyzed Dominion Cards</h1>
+<p class="mb-3">Cards below do not yet have a strategy review. <a href="/">View all cards</a></p>
+<table class="table table-striped align-middle">
+  <thead>
+    <tr>
+      <th scope="col">Image</th>
+      <th scope="col">Card Name</th>
+      <th scope="col">Set</th>
+      <th scope="col">Type</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for card in cards %}
+    <tr>
+      <td style="width: 80px;">
+        <a href="{{ url_for('card_page', set_slug=card.set_name|lower|replace(' ', '-'), card_slug=card.card_name|lower|replace(' ', '-')) }}">
+          <img src="/card-front-images/{{ card.set_name|lower }}/{{ card.card_name|lower|replace(' ', '-') }}.jpg" alt="{{ card.card_name }}" class="img-thumbnail" style="max-width: 70px;">
+        </a>
+      </td>
+      <td>
+        <a href="{{ url_for('card_page', set_slug=card.set_name|lower|replace(' ', '-'), card_slug=card.card_name|lower|replace(' ', '-')) }}">
+          {{ card.card_name }}
+        </a>
+      </td>
+      <td>{{ card.set_name }}</td>
+      <td>{{ card.type or '' }}</td>
+      <td>
+        <form action="{{ url_for('generate_strategy_route', set_slug=card.set_name|lower|replace(' ', '-'), card_slug=card.card_name|lower|replace(' ', '-')) }}" method="post" style="display:inline;">
+          <button class="btn btn-sm btn-warning" type="submit">Generate</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}404 Not Found | DominionAbyss{% endblock %}
+
+{% block content %}
+<div class="text-center my-5">
+  <h1 class="display-4">404</h1>
+  <h2 class="mb-4">Card Not Found</h2>
+  <p class="lead mb-4">Sorry, the page or card you are looking for does not exist.<br>But here are some Dominion cards to explore instead!</p>
+</div>
+<hr class="my-5">
+<h2 class="h5 mb-3 text-center">Explore Random Dominion Cards</h2>
+<div class="row row-cols-2 row-cols-md-4 g-3 mb-4">
+  {% for card in random_cards %}
+  <div class="col">
+    <div class="card h-100 card-hover">
+      <a href="{{ url_for('card_page', set_slug=card.set_name|lower|replace(' ', '-'), card_slug=card.card_name|lower|replace(' ', '-')) }}">
+        <img src="{{ url_for('card_image', set_name=card.set_name|lower, filename=card.card_name|lower|replace(' ', '-') + '.jpg') }}" class="card-img-top" alt="{{ card.card_name }}" onerror="this.onerror=null;this.src='/static/placeholder.jpg';">
+      </a>
+      <div class="card-body p-2">
+        <h6 class="card-title mb-1 fw-bold" style="font-size:1.18rem;">{{ card.card_name }}</h6>
+        <small class="text-muted">{{ card.set_name }}</small>
+      </div>
+      <div class="card-footer bg-light small text-muted" style="min-height:2.5em;">
+        {% if card.card_text %}
+          {{ card.card_text|replace('\n', '<br>')|replace('\r', '')|safe }}
+        {% else %}
+          <span class="text-muted">No card text available.</span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+<div class="text-center mt-4">
+  <a href="/" class="btn btn-primary btn-lg me-2">Home</a>
+  <a href="/search" class="btn btn-outline-secondary btn-lg me-2">Search</a>
+  <a href="/random" class="btn btn-outline-info btn-lg">Random Card</a>
+</div>
+{% endblock %}

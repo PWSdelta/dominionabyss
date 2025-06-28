@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>{% block title %}Dominion Strategy Site{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Dominion strategy guides, card reviews, and deckbuilding tips for all expansions. Explore the best $5 buys, attack cards, combos, and more for the Dominion card game." />
+  <meta name="keywords" content="Dominion, Dominion strategy, Dominion card reviews, Dominion combos, Dominion expansions, deckbuilding, board games, card games, Prosperity, Seaside, Intrigue, best Dominion cards, Dominion analysis" />
+  <meta name="author" content="DominionAbyss" />
+  <meta property="og:title" content="Dominion Strategy & Card Reviews" />
+  <meta property="og:description" content="Strategy guides, card reviews, and deckbuilding tips for the Dominion card game. Find the best cards, combos, and expansion highlights." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://dominionabyss.example.com/" />
+  <meta property="og:image" content="/static/placeholder.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Dominion Strategy & Card Reviews" />
+  <meta name="twitter:description" content="Strategy guides, card reviews, and deckbuilding tips for the Dominion card game." />
+  <meta name="twitter:image" content="/static/placeholder.jpg" />
+  <link rel="canonical" href="https://dominionabyss.example.com/" />
+  <!-- Bootstrap CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  >
+  <!-- Thematic fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <link rel="icon" type="image/png" href="/static/placeholder.jpg">
+  <meta name="robots" content="index, follow">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+      <a class="navbar-brand" href="/">DominionAbyss</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="/search">Search</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/random">Random Card</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://discord.gg/E7FxRR4k" target="_blank">Discord</a>
+          </li>
+        </ul>
+        {% block navbar_search %}
+        <form class="d-flex" method="get" action="/search" autocomplete="off" style="min-width: 250px;">
+          <input type="text" class="form-control me-2" name="q" placeholder="Search cards..." aria-label="Search" autocomplete="off">
+          <button class="btn btn-primary" type="submit">Search</button>
+        </form>
+        {% endblock %}
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <div class="container my-4">
+    {% block content %}{% endblock %}
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-light text-center py-3 mt-auto">
+    <div class="container">
+      <small>&copy; 2025 DominionAbyss. All rights reserved. | <a href="/random">Random Card</a> | <a href="https://discord.gg/E7FxRR4k" target="_blank" rel="noopener">Discord</a></small>
+      <br>
+      <small>
+        Dominion is © Rio Grande Games. This site is a fan project for educational and community purposes. Card images and text are used under fair use for commentary and review.
+      </small>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+  ></script>
+</body>
+</html>

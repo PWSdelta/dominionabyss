@@ -1,0 +1,283 @@
+/* Card hover effects for homepage and card lists */
+.card.h-100, .card.card-hover {
+  transition: box-shadow 0.2s, transform 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.card.h-100:hover, .card.card-hover:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+  transform: translateY(-4px) scale(1.03);
+  border-color: #bfa14a;
+  z-index: 2;
+}
+
+/* Card image frame and drop shadow */
+.card-img-top, .card-img, .img-thumbnail {
+  border: 3px solid #bfa14a;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(191,161,74,0.15), 0 1.5px 6px rgba(0,0,0,0.10);
+  background: #f8f5e1;
+}
+
+/* Modal for large card image */
+#cardImageModal .modal-dialog {
+  max-width: 420px;
+}
+#cardImageModal .modal-content {
+  background: #f8f5e1;
+  border: 2px solid #bfa14a;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+}
+#cardImageModal .modal-body {
+  padding: 0.5rem;
+  text-align: center;
+}
+#cardImageModal img {
+  width: 100%;
+  border-radius: 12px;
+  border: 3px solid #bfa14a;
+  background: #f8f5e1;
+}
+
+/* Thematic typography */
+h1, h2, h3, .navbar-brand {
+  font-family: 'Cinzel', serif;
+  letter-spacing: 0.5px;
+}
+body, .card, .btn, .form-label, .form-check-label {
+  font-family: 'Lato', 'Segoe UI', Arial, sans-serif;
+}
+
+/* Section headers */
+h2 {
+  border-bottom: 2px solid #bfa14a;
+  padding-bottom: 0.2em;
+  margin-bottom: 0.7em;
+}
+body {
+  font-family: Arial, sans-serif;
+  margin: 2rem;
+  background-color: #f7f7f7;
+  color: #333;
+}
+
+h1, h2 {
+  color: #2a5d9f;
+}
+
+img {
+  max-width: 300px;
+  display: block;
+  margin-bottom: 1rem;
+  border: 2px solid #ccc;
+}
+
+.card-container {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+button {
+  background-color: #2a5d9f;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #1f4c85;
+}
+
+.markdown-content {
+  border-top: 1px solid #ccc;
+  padding-top: 1rem;
+  margin-top: 1rem;
+}
+
+#typeahead-dropdown {
+  z-index: 1050;
+}
+
+/* Dominion custom navbar styles */
+.navbar {
+  background: rgba(34, 44, 80, 0.92);
+  backdrop-filter: blur(6px) saturate(1.2);
+  box-shadow: 0 6px 24px rgba(34,44,80,0.18), 0 1.5px 6px rgba(191,161,74,0.13);
+  border-bottom: 4px solid #e2c97a;
+  border-radius: 0 0 18px 18px !important;
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.navbar .container {
+  padding-left: 0.5rem !important;
+  padding-right: 0.5rem !important;
+}
+
+.navbar-brand {
+  font-size: 2.2rem;
+  color: #ffeec2 !important;
+  text-shadow: 0 2px 12px #222c50cc, 0 1.5px 6px #bfa14a55;
+  letter-spacing: 2px;
+  padding: 0.4rem 1.6rem 0.4rem 0.4rem;
+  border-radius: 10px;
+  background: rgba(191,161,74,0.13);
+  border-left: 5px solid #e2c97a;
+  border-right: 2px solid #bfa14a44;
+}
+
+.navbar-nav .nav-link {
+  color: #ffeec2 !important;
+  font-weight: 700;
+  margin: 0 0.7rem;
+  padding: 0.6rem 1.3rem;
+  border-radius: 8px;
+  transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+  box-shadow: 0 1px 6px rgba(34,44,80,0.10);
+  border: 2px solid transparent;
+}
+
+.navbar-nav .nav-link:hover, .navbar-nav .nav-link.active {
+  background: rgba(191,161,74,0.22);
+  color: #222c50 !important;
+  box-shadow: 0 2px 12px #bfa14a33;
+  border: 2px solid #e2c97a;
+  text-decoration: none;
+}
+
+.navbar .btn, .navbar .form-control {
+  border-radius: 8px;
+  box-shadow: 0 1px 6px rgba(34,44,80,0.10);
+}
+
+.navbar .form-control {
+  border: 2px solid #e2c97a;
+  background: #fffbe8cc;
+  color: #222c50;
+  font-weight: 600;
+  margin-right: 0.7rem;
+  padding: 0.7rem 1.1rem;
+}
+
+.navbar .form-control:focus {
+  border-color: #bfa14a;
+  box-shadow: 0 0 0 2px #e2c97a55;
+  background: #fffbe8ee;
+}
+
+.navbar .btn-primary {
+  background: linear-gradient(90deg, #e2c97a 0%, #222c50 100%);
+  border: none;
+  color: #222c50;
+  font-weight: 800;
+  box-shadow: 0 2px 12px #bfa14a33;
+  transition: background 0.18s, color 0.18s;
+  letter-spacing: 1px;
+}
+
+.navbar .btn-primary:hover {
+  background: linear-gradient(90deg, #222c50 0%, #e2c97a 100%);
+  color: #ffeec2;
+}
+
+/* Remove extra margin and padding around navbar for flush look */
+.navbar {
+  margin-bottom: 0.5rem !important;
+  border-radius: 0 0 18px 18px !important;
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
+}
+
+body > .navbar {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* Remove top margin from main content container */
+.container.my-4 {
+  margin-top: 0 !important;
+}
+
+/* Card link coloring by main type - bolder, more saturated */
+.card-link-action {
+  color: #27ae60; /* bolder green */
+  font-weight: 700;
+}
+.card-link-treasure {
+  color: #f4b400; /* bolder gold */
+  font-weight: 700;
+}
+.card-link-victory {
+  color: #2980b9; /* bolder blue */
+  font-weight: 700;
+}
+.card-link-curse {
+  color: #8e44ad; /* bolder purple */
+  font-weight: 700;
+}
+.card-link-night {
+  color: #616161; /* bolder gray */
+  font-weight: 700;
+}
+.card-link-event {
+  color: #e67e22; /* bolder orange */
+  font-weight: 700;
+}
+.card-link-landmark {
+  color: #a569bd; /* bolder violet */
+  font-weight: 700;
+}
+.card-link-project {
+  color: #c0392b; /* bolder red */
+  font-weight: 700;
+}
+.card-link-way {
+  color: #16a085; /* bolder teal */
+  font-weight: 700;
+}
+.card-link-other {
+  color: #888;
+  font-weight: 700;
+}
+
+.card-link {
+  text-decoration: underline dotted;
+  transition: color 0.2s;
+}
+.card-link:hover {
+  text-decoration: underline solid;
+  filter: brightness(1.2);
+}
+
+.card-type-key {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background: #f8f8f8;
+  border-radius: 8px;
+  font-size: 0.97em;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7em 1.2em;
+  align-items: center;
+}
+.card-type-key-label {
+  display: inline-block;
+  margin-right: 0.5em;
+  font-weight: bold;
+  opacity: 0.8;
+}
+.card-type-key-swatch {
+  display: inline-block;
+  width: 1.2em;
+  height: 1.2em;
+  border-radius: 0.3em;
+  margin-right: 0.3em;
+  vertical-align: middle;
+  border: 1px solid #ddd;
+}

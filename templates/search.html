@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Search Dominion Cards{% endblock %}
+
+{% block content %}
+<h1>Search Dominion Cards</h1>
+<form class="mb-4" method="get" action="{{ url_for('search') }}">
+  <div class="input-group input-group-lg">
+    <input type="text" class="form-control" name="q" value="{{ query }}" placeholder="Search by card or set name..." autofocus>
+    <button class="btn btn-primary" type="submit">Search</button>
+  </div>
+</form>
+
+{% macro card_text_snippet(card) %}
+  {% if card.card_text %}
+    {{ card.card_text|replace('\n', '<br>')|replace('\r', '')|safe }}
+  {% else %}
+    <span class="text-muted">No card text available.</span>
+  {% endif %}
+{% endmacro %}
+
+{% if query %}
+  <h2 class="h5 mb-3">Results for "{{ query }}"</h2>
+  {% if results and results|length > 0 %}
+    <div class="row row-cols-2 row-cols-md-4 g-3 mb-4">
+      {% for card in results %}
+      <div class="col">
+        <div class="card h-100 card-hover">
+          <a href="{{ url_for('card_page', set_slug=card.set_name|lower|replace(' ', '-'), card_slug=card.card_name|lower|replace(' ', '-')) }}">
+            <img src="{{ url_for('card_image', set_name=card.set_name|lower, filename=card.card_name|lower|replace(' ', '-') + '.jpg') }}" class="card-img-top" alt="{{ card.card_name }}" onerror="this.onerror=null;this.src='/static/placeholder.jpg';">
+          </a>
+          <div class="card-body p-2">
+            <h6 class="card-title mb-1 fw-bold" style="font-size:1.18rem;">{{ card.card_name }}</h6>
+            <small class="text-muted">{{ card.set_name }}</small>
+          </div>
+          <div class="card-footer bg-light small text-muted" style="min-height:2.5em;">
+            {{ card_text_snippet(card) }}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-warning">No cards found matching your search.</div>
+  {% endif %}
+{% endif %}
+
+<hr class="my-5">
+<h2 class="h5 mb-3 text-center">Explore Random Dominion Cards</h2>
+<div class="row row-cols-2 row-cols-md-4 g-3 mb-4">
+  {% for card in random_cards %}
+  <div class="col">
+    <div class="card h-100 card-hover">
+      <a href="{{ url_for('card_page', set_slug=card.set_name|lower|replace(' ', '-'), card_slug=card.card_name|lower|replace(' ', '-')) }}">
+        <img src="{{ url_for('card_image', set_name=card.set_name|lower, filename=card.card_name|lower|replace(' ', '-') + '.jpg') }}" class="card-img-top" alt="{{ card.card_name }}" onerror="this.onerror=null;this.src='/static/placeholder.jpg';">
+      </a>
+      <div class="card-body p-2">
+        <h6 class="card-title mb-1 fw-bold" style="font-size:1.18rem;">{{ card.card_name }}</h6>
+        <small class="text-muted">{{ card.set_name }}</small>
+      </div>
+      <div class="card-footer bg-light small text-muted" style="min-height:2.5em;">
+        {{ card_text_snippet(card) }}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

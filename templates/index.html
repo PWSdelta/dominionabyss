@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+
+{% block title %}Dominion Strategy Home{% endblock %}
+
+
+{% block content %}
+
+<div class="row mb-4">
+  <div class="col-lg-8">
+    <h1 class="mb-3">Dominion Strategy & Card Reviews</h1>
+    <p class="lead">Welcome to the Dominion card database and strategy site! Explore featured sets, top $5 buys, and more. Click any card for details and analysis, or use the navigation to browse all cards.</p>
+  </div>
+  <div class="col-lg-4 text-center">
+    {% if featured_cards %}
+      {% set random_card = featured_cards|random %}
+      <a href="{{ url_for('card_page', set_slug=random_card.set_name|lower, card_slug=random_card.card_name|lower|replace(' ', '-')) }}">
+        <img src="{{ url_for('card_image', set_name=random_card.set_name|lower, filename=random_card.card_name|lower|replace(' ', '-') + '.jpg') }}" alt="{{ random_card.card_name }}" class="img-fluid rounded shadow" style="max-height: 140px;">
+      </a>
+    {% else %}
+      <img src="/static/placeholder.jpg" alt="Dominion" class="img-fluid rounded shadow" style="max-height: 140px;">
+    {% endif %}
+  </div>
+</div>
+
+<h2 class="mt-5 mb-1">Featured Set: {{ featured_set }}</h2>
+<p class="text-muted mb-3">Explore cards from the {{ featured_set }} expansion, known for its unique mechanics and powerful treasures. This set adds depth and variety to any Dominion game.</p>
+<div class="row row-cols-2 row-cols-md-4 g-3 mb-4">
+  {% for card in featured_cards %}
+  <div class="col">
+    <div class="card h-100 card-hover">
+      <a href="{{ url_for('card_page', set_slug=card.set_name|lower|replace(' ', '-'), card_slug=card.card_name|lower|replace(' ', '-')) }}">
+        <img src="{{ url_for('card_image', set_name=card.set_name|lower, filename=card.card_name|lower|replace(' ', '-') + '.jpg') }}" class="card-img-top" alt="{{ card.card_name }}" onerror="this.onerror=null;this.src='/static/placeholder.jpg';">
+      </a>
+      <div class="card-body p-2">
+        <h6 class="card-title mb-1 fw-bold">{{ card.card_name }}</h6>
+        <small class="text-muted">{{ card.type or '' }} | {{ card.cost or '' }}</small>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<h2 class="mt-5 mb-1">Top $5 Buys</h2>
+<p class="text-muted mb-3">The $5 cost is a sweet spot in Dominion, offering some of the most impactful and versatile cards. Mastering these can give you a strategic edge in your games.</p>
+<div class="row row-cols-2 row-cols-md-4 g-3 mb-4">
+  {% for card in five_cost_cards %}
+  <div class="col">
+    <div class="card h-100">
+      <a href="{{ url_for('card_page', set_slug=card.set_name|lower|replace(' ', '-'), card_slug=card.card_name|lower|replace(' ', '-')) }}">
+        <img src="{{ url_for('card_image', set_name=card.set_name|lower, filename=card.card_name|lower|replace(' ', '-') + '.jpg') }}" class="card-img-top" alt="{{ card.card_name }}" onerror="this.onerror=null;this.src='/static/placeholder.jpg';">
+      </a>
+      <div class="card-body p-2">
+        <h6 class="card-title mb-1 fw-bold">{{ card.card_name }}</h6>
+        <small class="text-muted">{{ card.set_name }} | {{ card.type or '' }}</small>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<h2 class="mt-5 mb-1">Action Cards</h2>
+<p class="text-muted mb-3">Action cards drive your engine and create combos. Discover a selection of powerful actions that can shape your strategy and disrupt your opponents.</p>
+<div class="row row-cols-2 row-cols-md-4 g-3 mb-4">
+  {% for card in action_cards %}
+  <div class="col">
+    <div class="card h-100">
+      <a href="{{ url_for('card_page', set_slug=card.set_name|lower|replace(' ', '-'), card_slug=card.card_name|lower|replace(' ', '-')) }}">
+        <img src="{{ url_for('card_image', set_name=card.set_name|lower, filename=card.card_name|lower|replace(' ', '-') + '.jpg') }}" class="card-img-top" alt="{{ card.card_name }}" onerror="this.onerror=null;this.src='/static/placeholder.jpg';">
+      </a>
+      <div class="card-body p-2">
+        <h6 class="card-title mb-1 fw-bold">{{ card.card_name }}</h6>
+        <small class="text-muted">{{ card.set_name }} | {{ card.cost or '' }}</small>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<h2 class="mt-5 mb-1">Attack Cards</h2>
+<p class="text-muted mb-3">Attack cards interact with your opponents, slowing them down or disrupting their plans. Learn how to use these cards to gain an advantage and defend against them.</p>
+<div class="row row-cols-2 row-cols-md-4 g-3 mb-4">
+  {% for card in attack_cards %}
+  <div class="col">
+    <div class="card h-100">
+      <a href="{{ url_for('card_page', set_slug=card.set_name|lower|replace(' ', '-'), card_slug=card.card_name|lower|replace(' ', '-')) }}">
+        <img src="{{ url_for('card_image', set_name=card.set_name|lower, filename=card.card_name|lower|replace(' ', '-') + '.jpg') }}" class="card-img-top" alt="{{ card.card_name }}" onerror="this.onerror=null;this.src='/static/placeholder.jpg';">
+      </a>
+      <div class="card-body p-2">
+        <h6 class="card-title mb-1 fw-bold">{{ card.card_name }}</h6>
+        <small class="text-muted">{{ card.set_name }} | {{ card.cost or '' }}</small>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<h2 class="mt-5 mb-1">Most Popular Cards</h2>
+<p class="text-muted mb-3">These cards are frequently viewed and discussed by Dominion players. See which cards are fan favorites and why they stand out in gameplay and strategy.</p>
+<div class="row row-cols-2 row-cols-md-4 g-3 mb-4">
+  {% for card in popular_cards %}
+  <div class="col">
+    <div class="card h-100">
+      <a href="{{ url_for('card_page', set_slug=card.set_name|lower|replace(' ', '-'), card_slug=card.card_name|lower|replace(' ', '-')) }}">
+        <img src="{{ url_for('card_image', set_name=card.set_name|lower, filename=card.card_name|lower|replace(' ', '-') + '.jpg') }}" class="card-img-top" alt="{{ card.card_name }}" onerror="this.onerror=null;this.src='/static/placeholder.jpg';">
+      </a>
+      <div class="card-body p-2">
+        <h6 class="card-title mb-1 fw-bold">{{ card.card_name }}</h6>
+        <small class="text-muted">{{ card.set_name }} | {{ card.cost or '' }}</small>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<h2 class="mt-5 mb-1">Newest Strategy Reviews</h2>
+<p class="text-muted mb-3">Check out the latest strategy guides and card analyses added to the site. Stay up to date with fresh insights and community contributions.</p>
+<div class="row row-cols-2 row-cols-md-4 g-3 mb-4">
+  {% for card in newest_reviews %}
+  <div class="col">
+    <div class="card h-100">
+      <a href="{{ url_for('card_page', set_slug=card.set_name|lower|replace(' ', '-'), card_slug=card.card_name|lower|replace(' ', '-')) }}">
+        <img src="{{ url_for('card_image', set_name=card.set_name|lower, filename=card.card_name|lower|replace(' ', '-') + '.jpg') }}" class="card-img-top" alt="{{ card.card_name }}" onerror="this.onerror=null;this.src='/static/placeholder.jpg';">
+      </a>
+      <div class="card-body p-2">
+        <h6 class="card-title mb-1 fw-bold">{{ card.card_name }}</h6>
+        <small class="text-muted">{{ card.set_name }} | {{ card.cost or '' }}</small>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<h2 class="mt-5 mb-1">Beginner Picks</h2>
+<p class="text-muted mb-3">Great for new players, these cards are easy to use and teach the fundamentals of Dominion. Start your journey with these recommended picks.</p>
+<div class="row row-cols-2 row-cols-md-4 g-3 mb-4">
+  {% for card in beginner_cards %}
+  <div class="col">
+    <div class="card h-100">
+      <a href="{{ url_for('card_page', set_slug=card.set_name|lower|replace(' ', '-'), card_slug=card.card_name|lower|replace(' ', '-')) }}">
+        <img src="{{ url_for('card_image', set_name=card.set_name|lower, filename=card.card_name|lower|replace(' ', '-') + '.jpg') }}" class="card-img-top" alt="{{ card.card_name }}" onerror="this.onerror=null;this.src='/static/placeholder.jpg';">
+      </a>
+      <div class="card-body p-2">
+        <h6 class="card-title mb-1 fw-bold">{{ card.card_name }}</h6>
+        <small class="text-muted">{{ card.set_name }} | {{ card.cost or '' }}</small>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<h2 class="mt-5 mb-1">Cards Needing Analysis</h2>
+<p class="text-muted mb-3">Help grow the community by contributing your thoughts! These cards are missing strategy reviews—share your experience and help others learn.</p>
+<div class="row row-cols-2 row-cols-md-4 g-3 mb-4">
+  {% for card in unanalyzed_cards %}
+  <div class="col">
+    <div class="card h-100 border border-warning">
+      <a href="{{ url_for('card_page', set_slug=card.set_name|lower|replace(' ', '-'), card_slug=card.card_name|lower|replace(' ', '-')) }}">
+        <img src="{{ url_for('card_image', set_name=card.set_name|lower, filename=card.card_name|lower|replace(' ', '-') + '.jpg') }}" class="card-img-top" alt="{{ card.card_name }}" onerror="this.onerror=null;this.src='/static/placeholder.jpg';">
+      </a>
+      <div class="card-body p-2">
+        <h6 class="card-title mb-1 fw-bold">{{ card.card_name }}</h6>
+        <small class="text-muted">{{ card.set_name }} | {{ card.cost or '' }}</small>
+        <div class="mt-2">
+          <span class="badge bg-warning text-dark">Needs Review</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="text-center mt-5">
+  <a href="/" class="btn btn-primary btn-lg me-2">Home</a>
+  <a href="/unanalyzed" class="btn btn-outline-secondary btn-lg me-2">Unanalyzed Cards</a>
+  <a href="/random" class="btn btn-outline-info btn-lg">Random Card</a>
+</div>
+{% endblock %}
+
+{% block navbar_search %}
+<form class="d-flex" method="get" action="/search" autocomplete="off" style="min-width: 250px;">
+  <input type="text" class="form-control me-2" name="query" placeholder="Search cards..." aria-label="Search" autocomplete="off">
+  <button class="btn btn-primary" type="submit">Search</button>
+</form>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{% endblock %}
