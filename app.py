@@ -401,7 +401,9 @@ def autolink_card_names(text, skip_card_name=None):
                         type_classes.append(f"card-link-{t}")
             if not type_classes:
                 type_classes = ["card-link-other"]
-            return f'<a href="{url}" class="card-link {' '.join(type_classes)}">{name}</a>'
+            # Fix for Python <3.6: avoid nested braces in f-string
+            class_str = ' '.join(type_classes)
+            return '<a href="{}" class="card-link {}">{}</a>'.format(url, class_str, name)
         return name
     pattern = r'(?<![\w>])(' + '|'.join(re.escape(n) for n in sorted_names) + r')(?![\w<])'
     def link_outside_tags(html):
