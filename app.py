@@ -339,9 +339,6 @@ def page_not_found(e):
     random_cards = random.sample(all_cards_with_images, min(16, len(all_cards_with_images))) if all_cards_with_images else []
     return render_template('404.html', random_cards=random_cards), 404
 
-if __name__ == '__main__':
-    app.run(debug=True, port=5711)
-
 
 # --- Sitemap route for SEO ---
 from flask import Response
@@ -371,3 +368,7 @@ def sitemap():
         xml.append('  </url>')
     xml.append('</urlset>')
     return Response('\n'.join(xml), mimetype='application/xml')
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5711)
+
