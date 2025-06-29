@@ -247,37 +247,41 @@ def get_card_name_url_map():
 def autolink_card_names(text, skip_card_name=None):
     card_map = get_card_name_url_map()
     sorted_names = sorted(card_map.keys(), key=lambda n: -len(n))
-    # Only autolink in plain text, not inside HTML tags (best effort)
     def replacer(match):
         name = match.group(1)
-        # Skip linking if this is the card being reviewed (case-insensitive)
         if skip_card_name and name.lower() == skip_card_name.lower():
             return name
         for k in card_map:
             if k.lower() == name.lower():
                 url = card_map[k]["url"]
                 ctype = card_map[k]["type"]
+                # Try to get set_name for image URL
+                card_doc = cards.find_one({"card_name": k, "set_name": {"$exists": True}})
+                if card_doc:
+                    set_name = card_doc["set_name"].lower().replace(' ', '-')
+                    card_name = k.lower().replace(' ', '-')
+                    img_url = f"/card-front-images/{set_name}/{card_name}.jpg"
+                else:
+                    img_url = ""
                 break
         else:
             url = None
             ctype = ""
+            img_url = ""
         if url:
-            # Build a CSS class for every type word, e.g. "Action - Attack" => card-link-action card-link-action-attack
             type_classes = []
             if ctype:
                 for t in re.split(r'[\s\-/]+', ctype):
                     t = t.strip().lower()
                     if t:
-                        # For multiword types, join with dash
                         base = ctype.replace(",", "").replace(" ", "-").replace("/", "-").replace("--", "-").lower()
-                        # Add both the full type and each part for maximum coverage
                         type_classes.append(f"card-link-{base}")
                         type_classes.append(f"card-link-{t}")
             if not type_classes:
                 type_classes = ["card-link-other"]
-            # Fix for Python <3.6: avoid nested braces in f-string
             class_str = ' '.join(type_classes)
-            return '<a href="{}" class="card-link {}">{}</a>'.format(url, class_str, name)
+            # Add data-img attribute for popover
+            return '<a href="{}" class="card-link {}" data-img="{}">{}</a>'.format(url, class_str, img_url, name)
         return name
     pattern = r'(?<![\w>])(' + '|'.join(re.escape(n) for n in sorted_names) + r')(?![\w<])'
     def link_outside_tags(html):
@@ -341,6 +345,6 @@ def sitemap():
     xml.append('</urlset>')
     return Response('\n'.join(xml), mimetype='application/xml')
 
-# if __name__ == '__main__':
-#     app.run(debug=True, port=5711)
+if __name__ == '__main__':
+    app.run(port=5711)
 
