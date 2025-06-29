@@ -341,6 +341,6 @@ def sitemap():
     xml.append('</urlset>')
     return Response('\n'.join(xml), mimetype='application/xml')
 
-if __name__ == '__main__':
-    app.run(debug=True, port=5711)
+# if __name__ == '__main__':
+#     app.run(debug=True, port=5711)
 
