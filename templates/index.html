@@ -1,182 +1,389 @@
 {% extends "base.html" %}
 
-{% block title %}Dominion Strategy Home{% endblock %}
-
+{% block title %}DominionAbyss - Strategic Dominion Card Analysis{% endblock %}
 
 {% block content %}
-
-<div class="row mb-4">
-  <div class="col-lg-8">
-    <h1 class="mb-3">Dominion Strategy & Card Reviews</h1>
-    <p class="lead">Welcome to the Dominion card database and strategy site! Explore featured sets, top $5 buys, and more. Click any card for details and analysis, or use the navigation to browse all cards.</p>
-  </div>
-  <div class="col-lg-4 text-center">
-    {% if featured_cards %}
-      {% set random_card = featured_cards|random %}
-      <a href="{{ url_for('card_page', set_slug=random_card.set_name|lower, card_slug=random_card.card_name|lower|replace(' ', '-')) }}">
-        <img src="{{ url_for('card_image', set_name=random_card.set_name|lower, filename=random_card.card_name|lower|replace(' ', '-') + '.jpg') }}" alt="{{ random_card.card_name }}" class="img-fluid rounded shadow" style="max-height: 140px;">
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="hero-content">
+    <h1 class="hero-title fade-in-up">Welcome to DominionAbyss</h1>
+    <p class="hero-subtitle fade-in-up">Master the art of Dominion with strategic card analysis and insights</p>
+    <div class="hero-actions fade-in-up">
+      <a href="/search" class="btn btn-primary btn-lg me-3">
+        <i class="fas fa-search"></i> Explore Cards
       </a>
-    {% else %}
-      <img src="/static/placeholder.jpg" alt="Dominion" class="img-fluid rounded shadow" style="max-height: 140px;">
-    {% endif %}
-  </div>
-</div>
-
-<h2 class="mt-5 mb-1">Featured Set: {{ featured_set }}</h2>
-<p class="text-muted mb-3">Explore cards from the {{ featured_set }} expansion, known for its unique mechanics and powerful treasures. This set adds depth and variety to any Dominion game.</p>
-<div class="row row-cols-2 row-cols-md-4 g-3 mb-4">
-  {% for card in featured_cards %}
-  <div class="col">
-    <div class="card h-100 card-hover">
-      <a href="{{ url_for('card_page', set_slug=card.set_name|lower|replace(' ', '-'), card_slug=card.card_name|lower|replace(' ', '-')) }}">
-        <img src="{{ url_for('card_image', set_name=card.set_name|lower, filename=card.card_name|lower|replace(' ', '-') + '.jpg') }}" class="card-img-top" alt="{{ card.card_name }}" onerror="this.onerror=null;this.src='/static/placeholder.jpg';">
+      <a href="/random" class="btn btn-outline-primary btn-lg">
+        <i class="fas fa-random"></i> Random Card
       </a>
-      <div class="card-body p-2">
-        <h6 class="card-title mb-1 fw-bold">{{ card.card_name }}</h6>
-        <small class="text-muted">{{ card.type or '' }} | {{ card.cost or '' }}</small>
-      </div>
     </div>
   </div>
-  {% endfor %}
-</div>
+</section>
 
-<h2 class="mt-5 mb-1">Top $5 Buys</h2>
-<p class="text-muted mb-3">The $5 cost is a sweet spot in Dominion, offering some of the most impactful and versatile cards. Mastering these can give you a strategic edge in your games.</p>
-<div class="row row-cols-2 row-cols-md-4 g-3 mb-4">
-  {% for card in five_cost_cards %}
-  <div class="col">
-    <div class="card h-100">
-      <a href="{{ url_for('card_page', set_slug=card.set_name|lower|replace(' ', '-'), card_slug=card.card_name|lower|replace(' ', '-')) }}">
-        <img src="{{ url_for('card_image', set_name=card.set_name|lower, filename=card.card_name|lower|replace(' ', '-') + '.jpg') }}" class="card-img-top" alt="{{ card.card_name }}" onerror="this.onerror=null;this.src='/static/placeholder.jpg';">
-      </a>
-      <div class="card-body p-2">
-        <h6 class="card-title mb-1 fw-bold">{{ card.card_name }}</h6>
-        <small class="text-muted">{{ card.set_name }} | {{ card.type or '' }}</small>
+<!-- Featured Set Section -->
+<section class="content-section">
+  <div class="container">
+    <div class="row mb-4">
+      <div class="col-lg-8">
+        <h2 class="section-title">Featured Set: {{ featured_set }}</h2>
+        <p class="lead">Explore cards from the {{ featured_set }} expansion, known for its unique mechanics and strategic depth. This set adds variety and complexity to any Dominion game.</p>
+      </div>
+      <div class="col-lg-4 text-center">
+        {% if featured_cards %}
+          {% set random_card = featured_cards|random %}
+          <a href="{{ url_for('card_page', set_slug=random_card.set_name|lower, card_slug=random_card.card_name|lower|replace(' ', '-')) }}">
+            <img src="{{ url_for('card_image', set_name=random_card.set_name|lower, filename=random_card.card_name|lower|replace(' ', '-') + '.jpg') }}" 
+                 alt="{{ random_card.card_name }}" 
+                 class="img-fluid rounded shadow-lg" 
+                 style="max-height: 200px; border: 3px solid var(--primary-gold);">
+          </a>
+        {% endif %}
       </div>
     </div>
-  </div>
-  {% endfor %}
-</div>
-
-<h2 class="mt-5 mb-1">Action Cards</h2>
-<p class="text-muted mb-3">Action cards drive your engine and create combos. Discover a selection of powerful actions that can shape your strategy and disrupt your opponents.</p>
-<div class="row row-cols-2 row-cols-md-4 g-3 mb-4">
-  {% for card in action_cards %}
-  <div class="col">
-    <div class="card h-100">
-      <a href="{{ url_for('card_page', set_slug=card.set_name|lower|replace(' ', '-'), card_slug=card.card_name|lower|replace(' ', '-')) }}">
-        <img src="{{ url_for('card_image', set_name=card.set_name|lower, filename=card.card_name|lower|replace(' ', '-') + '.jpg') }}" class="card-img-top" alt="{{ card.card_name }}" onerror="this.onerror=null;this.src='/static/placeholder.jpg';">
-      </a>
-      <div class="card-body p-2">
-        <h6 class="card-title mb-1 fw-bold">{{ card.card_name }}</h6>
-        <small class="text-muted">{{ card.set_name }} | {{ card.cost or '' }}</small>
+    
+    <div class="row row-cols-2 row-cols-md-4 g-4 mb-5">
+      {% for card in featured_cards %}
+      <div class="col">
+        <div class="card h-100 card-hover fade-in-up">
+          <a href="{{ url_for('card_page', set_slug=card.set_name|lower|replace(' ', '-'), card_slug=card.card_name|lower|replace(' ', '-')) }}" class="text-decoration-none">
+            <img src="{{ url_for('card_image', set_name=card.set_name|lower, filename=card.card_name|lower|replace(' ', '-') + '.jpg') }}" 
+                 class="card-img-top" 
+                 alt="{{ card.card_name }}" 
+                 onerror="this.onerror=null;this.src='/static/placeholder.jpg';">
+            <div class="card-body">
+              <h6 class="card-title">{{ card.card_name }}</h6>
+              <small class="text-muted">{{ card.type or '' }} | {{ card.cost or '' }}</small>
+            </div>
+          </a>
+        </div>
       </div>
+      {% endfor %}
     </div>
   </div>
-  {% endfor %}
-</div>
+</section>
 
-<h2 class="mt-5 mb-1">Attack Cards</h2>
-<p class="text-muted mb-3">Attack cards interact with your opponents, slowing them down or disrupting their plans. Learn how to use these cards to gain an advantage and defend against them.</p>
-<div class="row row-cols-2 row-cols-md-4 g-3 mb-4">
-  {% for card in attack_cards %}
-  <div class="col">
-    <div class="card h-100">
-      <a href="{{ url_for('card_page', set_slug=card.set_name|lower|replace(' ', '-'), card_slug=card.card_name|lower|replace(' ', '-')) }}">
-        <img src="{{ url_for('card_image', set_name=card.set_name|lower, filename=card.card_name|lower|replace(' ', '-') + '.jpg') }}" class="card-img-top" alt="{{ card.card_name }}" onerror="this.onerror=null;this.src='/static/placeholder.jpg';">
-      </a>
-      <div class="card-body p-2">
-        <h6 class="card-title mb-1 fw-bold">{{ card.card_name }}</h6>
-        <small class="text-muted">{{ card.set_name }} | {{ card.cost or '' }}</small>
+<!-- Top $5 Buys Section -->
+<section class="content-section">
+  <div class="container">
+    <h2 class="section-title">Top $5 Buys</h2>
+    <p class="text-center text-muted mb-5">The $5 cost is a sweet spot in Dominion, offering some of the most impactful and versatile cards. Mastering these can give you a strategic edge in your games.</p>
+    
+    <div class="row row-cols-2 row-cols-md-4 g-4 mb-5">
+      {% for card in five_cost_cards %}
+      <div class="col">
+        <div class="card h-100 card-hover">
+          <a href="{{ url_for('card_page', set_slug=card.set_name|lower|replace(' ', '-'), card_slug=card.card_name|lower|replace(' ', '-')) }}" class="text-decoration-none">
+            <img src="{{ url_for('card_image', set_name=card.set_name|lower, filename=card.card_name|lower|replace(' ', '-') + '.jpg') }}" 
+                 class="card-img-top" 
+                 alt="{{ card.card_name }}" 
+                 onerror="this.onerror=null;this.src='/static/placeholder.jpg';">
+            <div class="card-body">
+              <h6 class="card-title">{{ card.card_name }}</h6>
+              <small class="text-muted">{{ card.set_name }} | {{ card.type or '' }}</small>
+            </div>
+          </a>
+        </div>
       </div>
+      {% endfor %}
     </div>
   </div>
-  {% endfor %}
-</div>
+</section>
 
-<h2 class="mt-5 mb-1">Most Popular Cards</h2>
-<p class="text-muted mb-3">These cards are frequently viewed and discussed by Dominion players. See which cards are fan favorites and why they stand out in gameplay and strategy.</p>
-<div class="row row-cols-2 row-cols-md-4 g-3 mb-4">
-  {% for card in popular_cards %}
-  <div class="col">
-    <div class="card h-100">
-      <a href="{{ url_for('card_page', set_slug=card.set_name|lower|replace(' ', '-'), card_slug=card.card_name|lower|replace(' ', '-')) }}">
-        <img src="{{ url_for('card_image', set_name=card.set_name|lower, filename=card.card_name|lower|replace(' ', '-') + '.jpg') }}" class="card-img-top" alt="{{ card.card_name }}" onerror="this.onerror=null;this.src='/static/placeholder.jpg';">
-      </a>
-      <div class="card-body p-2">
-        <h6 class="card-title mb-1 fw-bold">{{ card.card_name }}</h6>
-        <small class="text-muted">{{ card.set_name }} | {{ card.cost or '' }}</small>
+<!-- Card Categories Grid -->
+<section class="content-section bg-light">
+  <div class="container">
+    <div class="row">
+      <!-- Action Cards -->
+      <div class="col-lg-6 mb-5">
+        <h3 class="mb-3">Action Cards</h3>
+        <p class="text-muted mb-4">Action cards drive your engine and create combos. Discover powerful actions that can shape your strategy.</p>
+        <div class="row row-cols-2 row-cols-md-3 g-3">
+          {% for card in action_cards[:6] %}
+          <div class="col">
+            <div class="card h-100 card-hover">
+              <a href="{{ url_for('card_page', set_slug=card.set_name|lower|replace(' ', '-'), card_slug=card.card_name|lower|replace(' ', '-')) }}" class="text-decoration-none">
+                <img src="{{ url_for('card_image', set_name=card.set_name|lower, filename=card.card_name|lower|replace(' ', '-') + '.jpg') }}" 
+                     class="card-img-top" 
+                     alt="{{ card.card_name }}" 
+                     onerror="this.onerror=null;this.src='/static/placeholder.jpg';">
+                <div class="card-body p-2">
+                  <h6 class="card-title mb-1" style="font-size: 0.9rem;">{{ card.card_name }}</h6>
+                  <small class="text-muted">{{ card.set_name }}</small>
+                </div>
+              </a>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
       </div>
-    </div>
-  </div>
-  {% endfor %}
-</div>
-
-<h2 class="mt-5 mb-1">Newest Strategy Reviews</h2>
-<p class="text-muted mb-3">Check out the latest strategy guides and card analyses added to the site. Stay up to date with fresh insights and community contributions.</p>
-<div class="row row-cols-2 row-cols-md-4 g-3 mb-4">
-  {% for card in newest_reviews %}
-  <div class="col">
-    <div class="card h-100">
-      <a href="{{ url_for('card_page', set_slug=card.set_name|lower|replace(' ', '-'), card_slug=card.card_name|lower|replace(' ', '-')) }}">
-        <img src="{{ url_for('card_image', set_name=card.set_name|lower, filename=card.card_name|lower|replace(' ', '-') + '.jpg') }}" class="card-img-top" alt="{{ card.card_name }}" onerror="this.onerror=null;this.src='/static/placeholder.jpg';">
-      </a>
-      <div class="card-body p-2">
-        <h6 class="card-title mb-1 fw-bold">{{ card.card_name }}</h6>
-        <small class="text-muted">{{ card.set_name }} | {{ card.cost or '' }}</small>
-      </div>
-    </div>
-  </div>
-  {% endfor %}
-</div>
-
-<h2 class="mt-5 mb-1">Beginner Picks</h2>
-<p class="text-muted mb-3">Great for new players, these cards are easy to use and teach the fundamentals of Dominion. Start your journey with these recommended picks.</p>
-<div class="row row-cols-2 row-cols-md-4 g-3 mb-4">
-  {% for card in beginner_cards %}
-  <div class="col">
-    <div class="card h-100">
-      <a href="{{ url_for('card_page', set_slug=card.set_name|lower|replace(' ', '-'), card_slug=card.card_name|lower|replace(' ', '-')) }}">
-        <img src="{{ url_for('card_image', set_name=card.set_name|lower, filename=card.card_name|lower|replace(' ', '-') + '.jpg') }}" class="card-img-top" alt="{{ card.card_name }}" onerror="this.onerror=null;this.src='/static/placeholder.jpg';">
-      </a>
-      <div class="card-body p-2">
-        <h6 class="card-title mb-1 fw-bold">{{ card.card_name }}</h6>
-        <small class="text-muted">{{ card.set_name }} | {{ card.cost or '' }}</small>
-      </div>
-    </div>
-  </div>
-  {% endfor %}
-</div>
-
-<h2 class="mt-5 mb-1">Cards Needing Analysis</h2>
-<p class="text-muted mb-3">Help grow the community by contributing your thoughts! These cards are missing strategy reviews—share your experience and help others learn.</p>
-<div class="row row-cols-2 row-cols-md-4 g-3 mb-4">
-  {% for card in unanalyzed_cards %}
-  <div class="col">
-    <div class="card h-100 border border-warning">
-      <a href="{{ url_for('card_page', set_slug=card.set_name|lower|replace(' ', '-'), card_slug=card.card_name|lower|replace(' ', '-')) }}">
-        <img src="{{ url_for('card_image', set_name=card.set_name|lower, filename=card.card_name|lower|replace(' ', '-') + '.jpg') }}" class="card-img-top" alt="{{ card.card_name }}" onerror="this.onerror=null;this.src='/static/placeholder.jpg';">
-      </a>
-      <div class="card-body p-2">
-        <h6 class="card-title mb-1 fw-bold">{{ card.card_name }}</h6>
-        <small class="text-muted">{{ card.set_name }} | {{ card.cost or '' }}</small>
-        <div class="mt-2">
-          <span class="badge bg-warning text-dark">Needs Review</span>
+      
+      <!-- Attack Cards -->
+      <div class="col-lg-6 mb-5">
+        <h3 class="mb-3">Attack Cards</h3>
+        <p class="text-muted mb-4">Attack cards interact with your opponents, disrupting their plans and giving you strategic advantages.</p>
+        <div class="row row-cols-2 row-cols-md-3 g-3">
+          {% for card in attack_cards[:6] %}
+          <div class="col">
+            <div class="card h-100 card-hover">
+              <a href="{{ url_for('card_page', set_slug=card.set_name|lower|replace(' ', '-'), card_slug=card.card_name|lower|replace(' ', '-')) }}" class="text-decoration-none">
+                <img src="{{ url_for('card_image', set_name=card.set_name|lower, filename=card.card_name|lower|replace(' ', '-') + '.jpg') }}" 
+                     class="card-img-top" 
+                     alt="{{ card.card_name }}" 
+                     onerror="this.onerror=null;this.src='/static/placeholder.jpg';">
+                <div class="card-body p-2">
+                  <h6 class="card-title mb-1" style="font-size: 0.9rem;">{{ card.card_name }}</h6>
+                  <small class="text-muted">{{ card.set_name }}</small>
+                </div>
+              </a>
+            </div>
+          </div>
+          {% endfor %}
         </div>
       </div>
     </div>
   </div>
-  {% endfor %}
-</div>
+</section>
 
-<div class="text-center mt-5">
-  <a href="/" class="btn btn-primary btn-lg me-2">Home</a>
-  <a href="/random" class="btn btn-outline-info btn-lg">Random Card</a>
-</div>
+<!-- Popular & New Reviews -->
+<section class="content-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6 mb-5">
+        <h3 class="mb-3">Most Popular Cards</h3>
+        <p class="text-muted mb-4">These cards are frequently viewed and discussed by Dominion players. See which cards are fan favorites.</p>
+        <div class="row row-cols-2 row-cols-md-3 g-3">
+          {% for card in popular_cards[:6] %}
+          <div class="col">
+            <div class="card h-100 card-hover">
+              <a href="{{ url_for('card_page', set_slug=card.set_name|lower|replace(' ', '-'), card_slug=card.card_name|lower|replace(' ', '-')) }}" class="text-decoration-none">
+                <img src="{{ url_for('card_image', set_name=card.set_name|lower, filename=card.card_name|lower|replace(' ', '-') + '.jpg') }}" 
+                     class="card-img-top" 
+                     alt="{{ card.card_name }}" 
+                     onerror="this.onerror=null;this.src='/static/placeholder.jpg';">
+                <div class="card-body p-2">
+                  <h6 class="card-title mb-1" style="font-size: 0.9rem;">{{ card.card_name }}</h6>
+                  <small class="text-muted">{{ card.set_name }}</small>
+                </div>
+              </a>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      
+      <div class="col-lg-6 mb-5">
+        <h3 class="mb-3">Newest Strategy Reviews</h3>
+        <p class="text-muted mb-4">Check out the latest strategy guides and card analyses added to the site. Stay up to date with fresh insights.</p>
+        <div class="row row-cols-2 row-cols-md-3 g-3">
+          {% for card in newest_reviews[:6] %}
+          <div class="col">
+            <div class="card h-100 card-hover">
+              <a href="{{ url_for('card_page', set_slug=card.set_name|lower|replace(' ', '-'), card_slug=card.card_name|lower|replace(' ', '-')) }}" class="text-decoration-none">
+                <img src="{{ url_for('card_image', set_name=card.set_name|lower, filename=card.card_name|lower|replace(' ', '-') + '.jpg') }}" 
+                     class="card-img-top" 
+                     alt="{{ card.card_name }}" 
+                     onerror="this.onerror=null;this.src='/static/placeholder.jpg';">
+                <div class="card-body p-2">
+                  <h6 class="card-title mb-1" style="font-size: 0.9rem;">{{ card.card_name }}</h6>
+                  <small class="text-muted">{{ card.set_name }}</small>
+                </div>
+              </a>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Beginner & Unanalyzed Cards -->
+<section class="content-section bg-light">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6 mb-5">
+        <h3 class="mb-3">Beginner Picks</h3>
+        <p class="text-muted mb-4">Great for new players, these cards are easy to use and teach the fundamentals of Dominion.</p>
+        <div class="row row-cols-2 row-cols-md-3 g-3">
+          {% for card in beginner_cards[:6] %}
+          <div class="col">
+            <div class="card h-100 card-hover">
+              <a href="{{ url_for('card_page', set_slug=card.set_name|lower|replace(' ', '-'), card_slug=card.card_name|lower|replace(' ', '-')) }}" class="text-decoration-none">
+                <img src="{{ url_for('card_image', set_name=card.set_name|lower, filename=card.card_name|lower|replace(' ', '-') + '.jpg') }}" 
+                     class="card-img-top" 
+                     alt="{{ card.card_name }}" 
+                     onerror="this.onerror=null;this.src='/static/placeholder.jpg';">
+                <div class="card-body p-2">
+                  <h6 class="card-title mb-1" style="font-size: 0.9rem;">{{ card.card_name }}</h6>
+                  <small class="text-muted">{{ card.set_name }}</small>
+                </div>
+              </a>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      
+      <div class="col-lg-6 mb-5">
+        <h3 class="mb-3">Cards Needing Analysis</h3>
+        <p class="text-muted mb-4">Help grow the community by contributing your thoughts! These cards are missing strategy reviews.</p>
+        <div class="row row-cols-2 row-cols-md-3 g-3">
+          {% for card in unanalyzed_cards[:6] %}
+          <div class="col">
+            <div class="card h-100 card-hover border-warning">
+              <a href="{{ url_for('card_page', set_slug=card.set_name|lower|replace(' ', '-'), card_slug=card.card_name|lower|replace(' ', '-')) }}" class="text-decoration-none">
+                <img src="{{ url_for('card_image', set_name=card.set_name|lower, filename=card.card_name|lower|replace(' ', '-') + '.jpg') }}" 
+                     class="card-img-top" 
+                     alt="{{ card.card_name }}" 
+                     onerror="this.onerror=null;this.src='/static/placeholder.jpg';">
+                <div class="card-body p-2">
+                  <h6 class="card-title mb-1" style="font-size: 0.9rem;">{{ card.card_name }}</h6>
+                  <small class="text-muted">{{ card.set_name }}</small>
+                  <div class="mt-2">
+                    <span class="badge bg-warning text-dark">Needs Review</span>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="content-section">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8 text-center">
+        <h2>Ready to Master Dominion?</h2>
+        <p class="lead mb-4">Join thousands of players who have improved their Dominion skills with our strategic analysis and insights.</p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+          <a href="/search" class="btn btn-primary btn-lg">
+            <i class="fas fa-search"></i> Start Exploring
+          </a>
+          <a href="/random" class="btn btn-outline-primary btn-lg">
+            <i class="fas fa-shuffle"></i> Random Discovery
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+/* Custom styles for index page */
+.hero-section {
+  background: linear-gradient(135deg, var(--deep-blue) 0%, rgba(34, 44, 80, 0.9) 100%);
+  color: white;
+  padding: 4rem 0;
+  text-align: center;
+  margin-bottom: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="rgba(255,238,194,0.1)"/></svg>');
+  background-size: 50px 50px;
+  opacity: 0.3;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  color: var(--light-cream);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.hero-subtitle {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+  color: var(--secondary-gold);
+  font-weight: 400;
+}
+
+.hero-actions {
+  margin-top: 2rem;
+}
+
+.hero-actions .btn {
+  font-size: 1.1rem;
+  padding: 0.75rem 2rem;
+}
+
+.hero-actions .btn-outline-primary {
+  border: 2px solid var(--secondary-gold);
+  color: var(--secondary-gold);
+  background: transparent;
+}
+
+.hero-actions .btn-outline-primary:hover {
+  background: var(--secondary-gold);
+  color: var(--deep-blue);
+}
+
+.section-title {
+  text-align: center;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background: var(--primary-gold);
+}
+
+.content-section {
+  padding: 4rem 0;
+}
+
+.content-section:nth-child(even) {
+  background: rgba(248, 245, 225, 0.3);
+}
+
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2.5rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.1rem;
+  }
+  
+  .hero-actions {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .hero-actions .btn {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+</style>
 {% endblock %}
 
 {% block navbar_search %}
-<form class="d-flex" method="get" action="/search" autocomplete="off" style="min-width: 250px;">
+<form class="d-flex" method="get" action="/search" autocomplete="off">
   <input type="text" class="form-control me-2" name="query" placeholder="Search cards..." aria-label="Search" autocomplete="off">
   <button class="btn btn-primary" type="submit">Search</button>
 </form>

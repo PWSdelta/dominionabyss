@@ -23,8 +23,10 @@
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
     rel="stylesheet"
   >
-  <!-- Thematic fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <!-- Professional fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
   <link rel="icon" type="image/png" href="/static/placeholder.jpg">
   <meta name="robots" content="index, follow">
@@ -41,48 +43,92 @@
   gtag('config', 'G-7KFTC05PDV');
 </script>
 
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <!-- Professional Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light sticky-top">
     <div class="container">
-      <a class="navbar-brand" href="/">DominionAbyss</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <a class="navbar-brand" href="/">
+        <span class="text-primary">Dominion</span><span class="text-secondary">Abyss</span>
+      </a>
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link" href="/search">Search</a>
+            <a class="nav-link" href="/search">Browse Cards</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/random">Random Card</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="https://discord.gg/E7FxRR4k" target="_blank">Discord</a>
+            <a class="nav-link" href="/unanalyzed">Contribute</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://discord.gg/E7FxRR4k" target="_blank">
+              <i class="fab fa-discord me-1"></i>Community
+            </a>
           </li>
         </ul>
         {% block navbar_search %}
-        <form class="d-flex" method="get" action="/search" autocomplete="off" style="min-width: 250px;">
-          <input type="text" class="form-control me-2" name="q" placeholder="Search cards..." aria-label="Search" autocomplete="off">
-          <button class="btn btn-primary" type="submit">Search</button>
+        <form class="d-flex" method="get" action="/search" autocomplete="off">
+          <div class="input-group">
+            <input type="text" class="form-control" name="q" placeholder="Search cards..." aria-label="Search" autocomplete="off">
+            <button class="btn btn-primary" type="submit">
+              <i class="fas fa-search" aria-hidden="true"></i>
+              <span class="d-none d-md-inline ms-1">Search</span>
+            </button>
+          </div>
         </form>
         {% endblock %}
       </div>
     </div>
   </nav>
 
-  <!-- Main content -->
-  <div class="container my-4">
-    {% block content %}{% endblock %}
-  </div>
+  <!-- Main content with better spacing -->
+  <main class="flex-fill">
+    <div class="container-fluid px-3 px-lg-4">
+      {% block content %}{% endblock %}
+    </div>
+  </main>
 
-  <!-- Footer -->
-  <footer class="bg-light text-center py-3 mt-auto">
+  <!-- Professional Footer -->
+  <footer class="bg-dark text-light py-5 mt-5">
     <div class="container">
-      <small>&copy; 2025 DominionAbyss. All rights reserved. | <a href="/random">Random Card</a> | <a href="https://discord.gg/E7FxRR4k" target="_blank" rel="noopener">Discord</a></small>
-      <br>
-      <small>
-        Dominion is © Rio Grande Games. This site is a fan project for educational and community purposes. Card images and text are used under fair use for commentary and review.
-      </small>
+      <div class="row">
+        <div class="col-lg-6">
+          <h5 class="fw-bold mb-3">
+            <span class="text-primary">Dominion</span><span class="text-secondary">Abyss</span>
+          </h5>
+          <p class="text-light opacity-75 mb-3">Your comprehensive resource for Dominion strategy, card analysis, and deck building guides. Master the art of the kingdom with expert insights and community discussions.</p>
+        </div>
+        <div class="col-lg-3">
+          <h6 class="fw-semibold mb-3">Quick Links</h6>
+          <ul class="list-unstyled">
+            <li><a href="/search" class="text-light opacity-75 text-decoration-none">Browse Cards</a></li>
+            <li><a href="/random" class="text-light opacity-75 text-decoration-none">Random Card</a></li>
+            <li><a href="/sitemap.xml" class="text-light opacity-75 text-decoration-none">Sitemap</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-3">
+          <h6 class="fw-semibold mb-3">Community</h6>
+          <ul class="list-unstyled">
+            <li><a href="https://discord.gg/E7FxRR4k" target="_blank" class="text-light opacity-75 text-decoration-none">Discord Server</a></li>
+          </ul>
+        </div>
+      </div>
+      <hr class="my-4 opacity-25">
+      <div class="row align-items-center">
+        <div class="col-lg-8">
+          <small class="text-light opacity-50">
+            &copy; 2025 DominionAbyss. All rights reserved. Dominion is &copy; Rio Grande Games. This site is a fan project for educational and community purposes. Card images and text are used under fair use for commentary and review.
+          </small>
+        </div>
+        <div class="col-lg-4 text-lg-end">
+          <small class="text-light opacity-50">
+            Built with passion for the Dominion community
+          </small>
+        </div>
+      </div>
     </div>
   </footer>
 
@@ -90,23 +136,28 @@
   <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
   ></script>
-</body>
-</body>
-<script>
-// Card image popover for autolinked card names
-document.addEventListener("DOMContentLoaded", function() {
-  const popoverTriggerList = [].slice.call(document.querySelectorAll('.card-link[data-img]'));
-  popoverTriggerList.forEach(function(el) {
-    new bootstrap.Popover(el, {
-      trigger: 'hover',
-      placement: 'auto',
-      html: true,
-      content: function() {
-        const img = el.getAttribute('data-img');
-        return `<img src="${img}" alt="Card image" style="max-width:200px;max-height:300px;">`;
-      }
+  
+  <!-- Card popover functionality -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize popovers for card links
+      const cardLinks = document.querySelectorAll('.card-link[data-img]');
+      
+      cardLinks.forEach(link => {
+        const imgUrl = link.getAttribute('data-img');
+        if (imgUrl) {
+          new bootstrap.Popover(link, {
+            content: `<img src="${imgUrl}" class="img-fluid" style="max-width: 200px; border-radius: 8px;" onerror="this.style.display='none';">`,
+            html: true,
+            placement: 'top',
+            trigger: 'hover focus',
+            delay: { show: 500, hide: 100 }
+          });
+        }
+      });
     });
-  });
-});
-</script>
+  </script>
+  
+  {% block scripts %}{% endblock %}
+</body>
 </html>

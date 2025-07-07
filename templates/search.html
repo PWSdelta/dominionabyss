@@ -1,68 +1,257 @@
 {% extends "base.html" %}
 
-{% block title %}Search Dominion Cards{% endblock %}
+{% block title %}Search Dominion Cards - DominionAbyss{% endblock %}
 
 {% block content %}
-<h1>Search Dominion Cards</h1>
-<form class="mb-4" method="get" action="{{ url_for('search') }}">
-  <div class="input-group input-group-lg">
-    <input type="text" class="form-control" name="q" value="{{ query }}" placeholder="Search by card or set name..." autofocus>
-    <button class="btn btn-primary" type="submit">Search</button>
+<div class="container">
+  <!-- Search Header -->
+  <div class="search-header text-center mb-5">
+    <h1 class="display-5 mb-3">Search Dominion Cards</h1>
+    <p class="lead text-muted mb-4">Find the perfect cards for your strategy from our comprehensive database</p>
+    
+    <!-- Enhanced Search Form -->
+    <form class="search-form" method="get" action="{{ url_for('search') }}">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <div class="input-group input-group-lg shadow-sm">
+            <span class="input-group-text bg-white border-end-0">
+              <i class="fas fa-search text-muted"></i>
+            </span>
+            <input type="text" 
+                   class="form-control border-start-0 ps-0" 
+                   name="q" 
+                   value="{{ query }}" 
+                   placeholder="Search by card name, set, or type..." 
+                   autofocus>
+            <button class="btn btn-primary px-4" type="submit">
+              <i class="fas fa-search me-2"></i>Search
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
   </div>
-</form>
 
-{% macro card_text_snippet(card) %}
-  {% if card.card_text %}
-    {{ card.card_text|replace('\n', '<br>')|replace('\r', '')|safe }}
-  {% else %}
-    <span class="text-muted">No card text available.</span>
+  {% macro card_text_snippet(card) %}
+    {% if card.card_text %}
+      {{ card.card_text[:100]|replace('\n', ' ')|replace('\r', '')|safe }}{% if card.card_text|length > 100 %}...{% endif %}
+    {% else %}
+      <span class="text-muted">No card text available.</span>
+    {% endif %}
+  {% endmacro %}
+
+  <!-- Search Results -->
+  {% if query %}
+    <div class="results-section">
+      <div class="results-header d-flex justify-content-between align-items-center mb-4">
+        <h2 class="h4 mb-0">
+          <i class="fas fa-search text-primary me-2"></i>
+          Results for "<span class="text-primary">{{ query }}</span>"
+        </h2>
+        {% if results and results|length > 0 %}
+          <span class="badge bg-primary px-3 py-2">{{ results|length }} cards found</span>
+        {% endif %}
+      </div>
+      
+      {% if results and results|length > 0 %}
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 mb-5">
+          {% for card in results %}
+          <div class="col">
+            <div class="card h-100 card-hover shadow-sm">
+              <a href="{{ url_for('card_page', set_slug=card.set_name|lower|replace(' ', '-'), card_slug=card.card_name|lower|replace(' ', '-')) }}" class="text-decoration-none">
+                <div class="card-img-container position-relative">
+                  <img src="{{ url_for('card_image', set_name=card.set_name|lower, filename=card.card_name|lower|replace(' ', '-') + '.jpg') }}" 
+                       class="card-img-top" 
+                       alt="{{ card.card_name }}" 
+                       loading="lazy"
+                       onerror="this.onerror=null;this.src='/static/placeholder.jpg';">
+                  <div class="card-badge position-absolute top-0 end-0 m-2">
+                    <span class="badge bg-dark bg-opacity-75">{{ card.set_name }}</span>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <h6 class="card-title mb-2">{{ card.card_name }}</h6>
+                  <p class="card-text small text-muted">{{ card_text_snippet(card) }}</p>
+                </div>
+              </a>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="no-results text-center py-5">
+          <div class="mb-4">
+            <i class="fas fa-search text-muted" style="font-size: 4rem; opacity: 0.3;"></i>
+          </div>
+          <h3 class="h4 mb-3">No cards found</h3>
+          <p class="text-muted mb-4">We couldn't find any cards matching "<strong>{{ query }}</strong>"</p>
+          <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a href="/search" class="btn btn-outline-primary">
+              <i class="fas fa-search me-2"></i>New Search
+            </a>
+            <a href="/random" class="btn btn-primary">
+              <i class="fas fa-random me-2"></i>Random Card
+            </a>
+          </div>
+        </div>
+      {% endif %}
+    </div>
   {% endif %}
-{% endmacro %}
 
-{% if query %}
-  <h2 class="h5 mb-3">Results for "{{ query }}"</h2>
-  {% if results and results|length > 0 %}
-    <div class="row row-cols-2 row-cols-md-4 g-3 mb-4">
-      {% for card in results %}
+  <!-- Explore Section -->
+  <div class="explore-section">
+    <div class="section-divider">
+      <hr class="my-5">
+      <div class="section-title-wrapper text-center">
+        <h2 class="h4 mb-4">
+          <i class="fas fa-compass text-primary me-2"></i>
+          Explore Random Dominion Cards
+        </h2>
+      </div>
+    </div>
+    
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+      {% for card in random_cards %}
       <div class="col">
-        <div class="card h-100 card-hover">
-          <a href="{{ url_for('card_page', set_slug=card.set_name|lower|replace(' ', '-'), card_slug=card.card_name|lower|replace(' ', '-')) }}">
-            <img src="{{ url_for('card_image', set_name=card.set_name|lower, filename=card.card_name|lower|replace(' ', '-') + '.jpg') }}" class="card-img-top" alt="{{ card.card_name }}" onerror="this.onerror=null;this.src='/static/placeholder.jpg';">
+        <div class="card h-100 card-hover shadow-sm">
+          <a href="{{ url_for('card_page', set_slug=card.set_name|lower|replace(' ', '-'), card_slug=card.card_name|lower|replace(' ', '-')) }}" class="text-decoration-none">
+            <div class="card-img-container position-relative">
+              <img src="{{ url_for('card_image', set_name=card.set_name|lower, filename=card.card_name|lower|replace(' ', '-') + '.jpg') }}" 
+                   class="card-img-top" 
+                   alt="{{ card.card_name }}" 
+                   loading="lazy"
+                   onerror="this.onerror=null;this.src='/static/placeholder.jpg';">
+              <div class="card-badge position-absolute top-0 end-0 m-2">
+                <span class="badge bg-dark bg-opacity-75">{{ card.set_name }}</span>
+              </div>
+            </div>
+            <div class="card-body">
+              <h6 class="card-title mb-2">{{ card.card_name }}</h6>
+              <p class="card-text small text-muted">{{ card_text_snippet(card) }}</p>
+            </div>
           </a>
-          <div class="card-body p-2">
-            <h6 class="card-title mb-1 fw-bold" style="font-size:1.18rem;">{{ card.card_name }}</h6>
-            <small class="text-muted">{{ card.set_name }}</small>
-          </div>
-          <div class="card-footer bg-light small text-muted" style="min-height:2.5em;">
-            {{ card_text_snippet(card) }}
-          </div>
         </div>
       </div>
       {% endfor %}
     </div>
-  {% else %}
-    <div class="alert alert-warning">No cards found matching your search.</div>
-  {% endif %}
-{% endif %}
-
-<hr class="my-5">
-<h2 class="h5 mb-3 text-center">Explore Random Dominion Cards</h2>
-<div class="row row-cols-2 row-cols-md-4 g-3 mb-4">
-  {% for card in random_cards %}
-  <div class="col">
-    <div class="card h-100 card-hover">
-      <a href="{{ url_for('card_page', set_slug=card.set_name|lower|replace(' ', '-'), card_slug=card.card_name|lower|replace(' ', '-')) }}">
-        <img src="{{ url_for('card_image', set_name=card.set_name|lower, filename=card.card_name|lower|replace(' ', '-') + '.jpg') }}" class="card-img-top" alt="{{ card.card_name }}" onerror="this.onerror=null;this.src='/static/placeholder.jpg';">
-      </a>
-      <div class="card-body p-2">
-        <h6 class="card-title mb-1 fw-bold" style="font-size:1.18rem;">{{ card.card_name }}</h6>
-        <small class="text-muted">{{ card.set_name }}</small>
-      </div>
-      <div class="card-footer bg-light small text-muted" style="min-height:2.5em;">
-        {{ card_text_snippet(card) }}
-      </div>
-    </div>
   </div>
-  {% endfor %}
 </div>
+
+<style>
+/* Search page specific styles */
+.search-header {
+  padding: 2rem 0;
+  background: linear-gradient(135deg, rgba(248, 245, 225, 0.4) 0%, rgba(255, 255, 255, 0.8) 100%);
+  border-radius: var(--radius-lg);
+  margin-bottom: 3rem;
+}
+
+.search-form .input-group {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.search-form .input-group-text {
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--border-light);
+  border-right: none;
+}
+
+.search-form .form-control {
+  border: 2px solid var(--border-light);
+  border-left: none;
+  border-right: none;
+  box-shadow: none;
+  font-size: 1.1rem;
+  padding: 0.75rem 1rem;
+}
+
+.search-form .form-control:focus {
+  border-color: var(--primary-gold);
+  box-shadow: none;
+}
+
+.search-form .input-group:focus-within .input-group-text {
+  border-color: var(--primary-gold);
+}
+
+.search-form .btn {
+  border: 2px solid var(--primary-gold);
+  border-left: none;
+  font-weight: 600;
+}
+
+.results-header {
+  padding: 1.5rem 0;
+  border-bottom: 2px solid var(--border-light);
+}
+
+.results-header .badge {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.card-img-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-img-top {
+  transition: transform var(--transition-fast);
+  height: 200px;
+  object-fit: cover;
+}
+
+.card:hover .card-img-top {
+  transform: scale(1.05);
+}
+
+.card-badge .badge {
+  font-size: 0.75rem;
+  padding: 0.4rem 0.8rem;
+  font-weight: 500;
+  border-radius: 20px;
+}
+
+.no-results {
+  background: var(--soft-gray);
+  border-radius: var(--radius-lg);
+  margin: 2rem 0;
+}
+
+.section-divider {
+  margin: 3rem 0;
+}
+
+.section-title-wrapper {
+  position: relative;
+  background: white;
+  padding: 0 2rem;
+  margin-top: -2rem;
+}
+
+.explore-section {
+  padding: 2rem 0;
+}
+
+@media (max-width: 768px) {
+  .search-header {
+    padding: 1.5rem 1rem;
+  }
+  
+  .search-form .input-group {
+    max-width: 100%;
+  }
+  
+  .results-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .card-img-top {
+    height: 180px;
+  }
+}
+</style>
 {% endblock %}

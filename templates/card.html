@@ -1,46 +1,374 @@
 {% extends "base.html" %}
 
-{% block title %}{{ card.card_name }} Dominion Card Review & Strategy Guide{% endblock %}
+{% block title %}{{ card.card_name }} - Dominion Card Review & Strategy Guide | DominionAbyss{% endblock %}
 
 {% block content %}
-<div class="row">
-  <div class="col-md-4">
-    <img
-      class="card-img card-hover"
-      src="/card-front-images/{{ card.set_name|lower }}/{{ card.card_name|lower|replace(' ', '-') }}.jpg"
-      alt="{{ card.card_name }}"
-      style="cursor:pointer;"
-      data-bs-toggle="modal" data-bs-target="#cardImageModal"
-      id="mainCardImage"
-    >
+<div class="card-page">
+  <div class="container">
+    <!-- Card Header -->
+    <div class="card-header-section mb-5">
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-3">
+              <li class="breadcrumb-item"><a href="/">Home</a></li>
+              <li class="breadcrumb-item"><a href="/search">Cards</a></li>
+              <li class="breadcrumb-item">{{ card.set_name }}</li>
+              <li class="breadcrumb-item active" aria-current="page">{{ card.card_name }}</li>
+            </ol>
+          </nav>
+          <h1 class="card-title-main mb-3">
+            {{ card.card_name }}
+            <small class="text-muted ms-2">({{ card.set_name }})</small>
+          </h1>
+        </div>
+        <div class="col-md-4 text-end">
+          <div class="card-actions">
+            <a href="/random" class="btn btn-outline-primary btn-sm">
+              <i class="fas fa-random me-1"></i>Random Card
+            </a>
+            <a href="/search" class="btn btn-primary btn-sm">
+              <i class="fas fa-search me-1"></i>Search Cards
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="row g-4">
+      <!-- Card Image Column -->
+      <div class="col-lg-4">
+        <div class="card-image-section">
+          <div class="card-image-container mb-4">
+            <img class="card-img-display img-fluid shadow-lg" 
+                 src="/card-front-images/{{ card.set_name|lower }}/{{ card.card_name|lower|replace(' ', '-') }}.jpg"
+                 alt="{{ card.card_name }}"
+                 style="cursor: pointer; max-width: 100%; height: auto;"
+                 data-bs-toggle="modal" 
+                 data-bs-target="#cardImageModal"
+                 id="mainCardImage"
+                 onerror="this.onerror=null;this.src='/static/placeholder.jpg';">
+          </div>
+          
+          <div class="card-info-panel">
+            <div class="info-item">
+              <div class="info-label">Cost</div>
+              <div class="info-value">{{ card.cost or 'N/A' }}</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Type</div>
+              <div class="info-value">{{ card.type or 'N/A' }}</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Set</div>
+              <div class="info-value">{{ card.set_name }}</div>
+            </div>
+          </div>
+          
+          <div class="card-text-panel mt-4">
+            <h4 class="panel-title">Card Text</h4>
+            <div class="card-text-content">
+              {% if card.card_text %}
+                {{ card.card_text|replace('\n', '<br>')|safe }}
+              {% else %}
+                <em class="text-muted">No card text available.</em>
+              {% endif %}
+            </div>
+          </div>
+          
+          <div class="text-center mt-4">
+            <small class="text-muted">
+              <i class="fas fa-info-circle me-1"></i>
+              Some card images may not be available for public viewing.
+            </small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Strategy Content Column -->
+      <div class="col-lg-8">
+        <div class="strategy-section">
+          <div class="section-header">
+            <h2 class="section-title">
+              <i class="fas fa-chess me-2"></i>
+              Strategy Review
+            </h2>
+          </div>
+          
+          <div class="strategy-content">
+            {% if strategy_html %}
+              <div class="markdown-content">{{ strategy_html|autolink_cards|safe }}</div>
+            {% else %}
+              <div class="no-strategy-content">
+                <div class="text-center py-5">
+                  <i class="fas fa-edit text-muted mb-3" style="font-size: 3rem; opacity: 0.3;"></i>
+                  <h4 class="h5 mb-3">No Strategy Review Yet</h4>
+                  <p class="text-muted mb-4">
+                    This card hasn't been analyzed yet. Want to contribute your strategic insights?
+                  </p>
+                  <div class="d-flex justify-content-center gap-3 flex-wrap">
+                    <a href="/random" class="btn btn-primary">
+                      <i class="fas fa-random me-1"></i>Try Another Card
+                    </a>
+                    <a href="/search" class="btn btn-outline-primary">
+                      <i class="fas fa-search me-1"></i>Browse Cards
+                    </a>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+        
+        <!-- Card Type Color Legend -->
+        {% if strategy_html %}
+        <div class="card-type-key">
+          <div class="card-type-key-label">Card Type Colors:</div>
+          <div class="card-type-key-item">
+            <div class="card-type-key-swatch" style="background-color: #059669;"></div>
+            Action
+          </div>
+          <div class="card-type-key-item">
+            <div class="card-type-key-swatch" style="background-color: #d97706;"></div>
+            Treasure
+          </div>
+          <div class="card-type-key-item">
+            <div class="card-type-key-swatch" style="background-color: #2563eb;"></div>
+            Victory
+          </div>
+          <div class="card-type-key-item">
+            <div class="card-type-key-swatch" style="background-color: #7c3aed;"></div>
+            Curse
+          </div>
+          <div class="card-type-key-item">
+            <div class="card-type-key-swatch" style="background-color: #dc2626;"></div>
+            Event
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Modal for large card image -->
 <div class="modal fade" id="cardImageModal" tabindex="-1" aria-labelledby="cardImageModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-body">
-        <img src="/card-front-images/{{ card.set_name|lower }}/{{ card.card_name|lower|replace(' ', '-') }}.jpg" alt="{{ card.card_name }}" />
+        <img src="/card-front-images/{{ card.set_name|lower }}/{{ card.card_name|lower|replace(' ', '-') }}.jpg" 
+             alt="{{ card.card_name }}" 
+             class="img-fluid" 
+             onerror="this.onerror=null;this.src='/static/placeholder.jpg';">
       </div>
     </div>
   </div>
 </div>
-  
-    <div class="text-muted small text-center mb-3" style="font-size: 0.97em;">
-      Some card images may not be available for public viewing.
-    </div>
-</div>
-  
-  <div class="col-md-8">
-    <h1>{{ card.card_name }} <small class="text-muted">({{ card.set_name }})</small></h1>
-    <p><strong>Cost:</strong> {{ card.cost }}</p>
-    <p><strong>Type:</strong> {{ card.type }}</p>
-    <p><strong>Text:</strong> {{ card.card_text }}</p>
 
-    <h2 class="mt-4">Strategy Review</h2>
-        {% if strategy_html %}
-            <div class="markdown-content">{{ strategy_html|autolink_cards|safe }}</div>
-        {% else %}
-            <p><em>No strategy review yet.</em></p>
-        {% endif %}
-  </div>
-</div>
+<style>
+/* Card page specific styles */
+.card-page {
+  padding: 2rem 0;
+}
+
+.card-header-section {
+  background: linear-gradient(135deg, rgba(248, 245, 225, 0.4) 0%, rgba(255, 255, 255, 0.8) 100%);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.card-title-main {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--deep-blue);
+  margin-bottom: 1rem;
+}
+
+.breadcrumb {
+  background: transparent;
+  padding: 0;
+  margin: 0;
+}
+
+.breadcrumb-item a {
+  color: var(--primary-gold);
+  text-decoration: none;
+}
+
+.breadcrumb-item a:hover {
+  text-decoration: underline;
+}
+
+.card-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.card-image-container {
+  text-align: center;
+  position: relative;
+}
+
+.card-img-display {
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  border: 3px solid var(--primary-gold);
+  transition: transform var(--transition-fast);
+  background: var(--off-white);
+}
+
+.card-img-display:hover {
+  transform: scale(1.02);
+}
+
+.card-info-panel {
+  background: white;
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 6px var(--shadow-light);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.info-item:last-child {
+  border-bottom: none;
+}
+
+.info-label {
+  font-weight: 600;
+  color: var(--deep-blue);
+  font-size: 0.9rem;
+}
+
+.info-value {
+  color: var(--primary-gold);
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.card-text-panel {
+  background: white;
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 6px var(--shadow-light);
+  padding: 1.5rem;
+  border: 1px solid var(--border-light);
+}
+
+.panel-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--deep-blue);
+  margin-bottom: 1rem;
+  border-bottom: 2px solid var(--primary-gold);
+  padding-bottom: 0.5rem;
+}
+
+.card-text-content {
+  line-height: 1.6;
+  color: #4a5568;
+  font-size: 0.95rem;
+}
+
+.strategy-section {
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 6px var(--shadow-light);
+  padding: 2rem;
+  min-height: 400px;
+}
+
+.section-header {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--border-light);
+}
+
+.section-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--deep-blue);
+  margin: 0;
+}
+
+.markdown-content {
+  line-height: 1.8;
+  color: #4a5568;
+}
+
+.markdown-content h3 {
+  color: var(--deep-blue);
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+}
+
+.markdown-content h4 {
+  color: var(--primary-gold);
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  font-size: 1.1rem;
+}
+
+.markdown-content p {
+  margin-bottom: 1.2rem;
+}
+
+.markdown-content ul, .markdown-content ol {
+  margin-bottom: 1.5rem;
+  padding-left: 1.5rem;
+}
+
+.markdown-content li {
+  margin-bottom: 0.5rem;
+}
+
+.no-strategy-content {
+  background: var(--soft-gray);
+  border-radius: var(--radius-md);
+  border: 2px dashed var(--border-light);
+}
+
+.card-type-key {
+  background: white;
+  border-radius: var(--radius-md);
+  box-shadow: 0 2px 4px var(--shadow-light);
+  padding: 1.5rem;
+  margin-top: 2rem;
+  border: 1px solid var(--border-light);
+}
+
+@media (max-width: 768px) {
+  .card-title-main {
+    font-size: 2rem;
+  }
+  
+  .card-header-section {
+    padding: 1.5rem;
+  }
+  
+  .card-actions {
+    justify-content: center;
+    margin-top: 1rem;
+  }
+  
+  .strategy-section {
+    padding: 1.5rem;
+  }
+  
+  .section-title {
+    font-size: 1.5rem;
+  }
+}
+</style>
 {% endblock %}

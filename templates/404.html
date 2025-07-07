@@ -1,40 +1,223 @@
 {% extends "base.html" %}
 
-{% block title %}404 Not Found | DominionAbyss{% endblock %}
+{% block title %}404 - Page Not Found | DominionAbyss{% endblock %}
 
 {% block content %}
-<div class="text-center my-5">
-  <h1 class="display-4">404</h1>
-  <h2 class="mb-4">Card Not Found</h2>
-  <p class="lead mb-4">Sorry, the page or card you are looking for does not exist.<br>But here are some Dominion cards to explore instead!</p>
-</div>
-<hr class="my-5">
-<h2 class="h5 mb-3 text-center">Explore Random Dominion Cards</h2>
-<div class="row row-cols-2 row-cols-md-4 g-3 mb-4">
-  {% for card in random_cards %}
-  <div class="col">
-    <div class="card h-100 card-hover">
-      <a href="{{ url_for('card_page', set_slug=card.set_name|lower|replace(' ', '-'), card_slug=card.card_name|lower|replace(' ', '-')) }}">
-        <img src="{{ url_for('card_image', set_name=card.set_name|lower, filename=card.card_name|lower|replace(' ', '-') + '.jpg') }}" class="card-img-top" alt="{{ card.card_name }}" onerror="this.onerror=null;this.src='/static/placeholder.jpg';">
-      </a>
-      <div class="card-body p-2">
-        <h6 class="card-title mb-1 fw-bold" style="font-size:1.18rem;">{{ card.card_name }}</h6>
-        <small class="text-muted">{{ card.set_name }}</small>
+<div class="error-page">
+  <div class="container">
+    <!-- 404 Header -->
+    <div class="error-header text-center py-5">
+      <div class="error-icon mb-4">
+        <i class="fas fa-search text-primary" style="font-size: 5rem; opacity: 0.3;"></i>
       </div>
-      <div class="card-footer bg-light small text-muted" style="min-height:2.5em;">
-        {% if card.card_text %}
-          {{ card.card_text|replace('\n', '<br>')|replace('\r', '')|safe }}
-        {% else %}
-          <span class="text-muted">No card text available.</span>
-        {% endif %}
+      <h1 class="display-1 text-primary mb-2">404</h1>
+      <h2 class="h3 mb-4">Card Not Found</h2>
+      <p class="lead text-muted mb-4">
+        Oops! The page or card you're looking for seems to have vanished into the Dominion void.<br>
+        But don't worry - there are plenty of other amazing cards to explore!
+      </p>
+      
+      <!-- Quick Actions -->
+      <div class="error-actions d-flex justify-content-center gap-3 flex-wrap mb-5">
+        <a href="/" class="btn btn-primary btn-lg">
+          <i class="fas fa-home me-2"></i>Go Home
+        </a>
+        <a href="/search" class="btn btn-outline-primary btn-lg">
+          <i class="fas fa-search me-2"></i>Search Cards
+        </a>
+        <a href="/random" class="btn btn-outline-secondary btn-lg">
+          <i class="fas fa-random me-2"></i>Random Card
+        </a>
       </div>
     </div>
+
+    <!-- Helpful Suggestions -->
+    <div class="suggestions-section">
+      <div class="row">
+        <div class="col-md-8 mx-auto">
+          <div class="suggestions-card bg-light rounded p-4 mb-5">
+            <h3 class="h5 mb-3">
+              <i class="fas fa-lightbulb text-warning me-2"></i>
+              What can you do instead?
+            </h3>
+            <ul class="list-unstyled">
+              <li class="mb-2">
+                <i class="fas fa-check text-success me-2"></i>
+                Try searching for a specific card name or set
+              </li>
+              <li class="mb-2">
+                <i class="fas fa-check text-success me-2"></i>
+                Browse our collection of analyzed cards
+              </li>
+              <li class="mb-2">
+                <i class="fas fa-check text-success me-2"></i>
+                Discover random cards for inspiration
+              </li>
+              <li class="mb-2">
+                <i class="fas fa-check text-success me-2"></i>
+                Check out our strategy guides and reviews
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Random Cards Section -->
+    <div class="random-cards-section">
+      <div class="section-header text-center mb-5">
+        <h2 class="h4 mb-3">
+          <i class="fas fa-cards-blank text-primary me-2"></i>
+          Discover These Amazing Cards Instead
+        </h2>
+        <p class="text-muted">Since you're here, why not explore some of these fantastic Dominion cards?</p>
+      </div>
+      
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 mb-5">
+        {% for card in random_cards %}
+        <div class="col">
+          <div class="card h-100 card-hover shadow-sm">
+            <a href="{{ url_for('card_page', set_slug=card.set_name|lower|replace(' ', '-'), card_slug=card.card_name|lower|replace(' ', '-')) }}" class="text-decoration-none">
+              <div class="card-img-container position-relative">
+                <img src="{{ url_for('card_image', set_name=card.set_name|lower, filename=card.card_name|lower|replace(' ', '-') + '.jpg') }}" 
+                     class="card-img-top" 
+                     alt="{{ card.card_name }}" 
+                     loading="lazy"
+                     onerror="this.onerror=null;this.src='/static/placeholder.jpg';">
+                <div class="card-badge position-absolute top-0 end-0 m-2">
+                  <span class="badge bg-dark bg-opacity-75">{{ card.set_name }}</span>
+                </div>
+              </div>
+              <div class="card-body">
+                <h6 class="card-title mb-2">{{ card.card_name }}</h6>
+                <p class="card-text small text-muted">
+                  {% if card.card_text %}
+                    {{ card.card_text[:80]|replace('\n', ' ')|replace('\r', '')|safe }}{% if card.card_text|length > 80 %}...{% endif %}
+                  {% else %}
+                    Strategic analysis available
+                  {% endif %}
+                </p>
+              </div>
+            </a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Final CTA -->
+    <div class="final-cta text-center py-4">
+      <p class="text-muted mb-3">Still can't find what you're looking for?</p>
+      <a href="/search" class="btn btn-primary btn-lg">
+        <i class="fas fa-search me-2"></i>Try a Different Search
+      </a>
+    </div>
   </div>
-  {% endfor %}
 </div>
-<div class="text-center mt-4">
-  <a href="/" class="btn btn-primary btn-lg me-2">Home</a>
-  <a href="/search" class="btn btn-outline-secondary btn-lg me-2">Search</a>
-  <a href="/random" class="btn btn-outline-info btn-lg">Random Card</a>
-</div>
+
+<style>
+/* 404 page specific styles */
+.error-page {
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  padding: 2rem 0;
+}
+
+.error-header {
+  background: linear-gradient(135deg, rgba(248, 245, 225, 0.4) 0%, rgba(255, 255, 255, 0.8) 100%);
+  border-radius: var(--radius-lg);
+  margin-bottom: 3rem;
+}
+
+.error-icon {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.error-actions .btn {
+  font-size: 1.1rem;
+  padding: 0.75rem 1.5rem;
+}
+
+.suggestions-card {
+  border: 1px solid var(--border-light);
+  box-shadow: 0 4px 6px var(--shadow-light);
+}
+
+.suggestions-card ul li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.suggestions-card ul li:last-child {
+  border-bottom: none;
+}
+
+.section-header {
+  padding: 2rem 0 1rem;
+}
+
+.card-img-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-img-top {
+  transition: transform var(--transition-fast);
+  height: 200px;
+  object-fit: cover;
+}
+
+.card:hover .card-img-top {
+  transform: scale(1.05);
+}
+
+.card-badge .badge {
+  font-size: 0.75rem;
+  padding: 0.4rem 0.8rem;
+  font-weight: 500;
+  border-radius: 20px;
+}
+
+.final-cta {
+  border-top: 1px solid var(--border-light);
+  margin-top: 2rem;
+}
+
+@media (max-width: 768px) {
+  .error-header {
+    padding: 2rem 1rem;
+  }
+  
+  .error-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .error-actions .btn {
+    width: 100%;
+    max-width: 250px;
+  }
+  
+  .card-img-top {
+    height: 180px;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+  .error-page .display-1 {
+    font-size: 4rem;
+  }
+  
+  .error-icon i {
+    font-size: 3rem !important;
+  }
+}
+</style>
 {% endblock %}

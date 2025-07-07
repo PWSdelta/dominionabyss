@@ -247,41 +247,47 @@ def get_card_name_url_map():
 def autolink_card_names(text, skip_card_name=None):
     card_map = get_card_name_url_map()
     sorted_names = sorted(card_map.keys(), key=lambda n: -len(n))
+    # Only autolink in plain text, not inside HTML tags (best effort)
     def replacer(match):
         name = match.group(1)
+        # Skip linking if this is the card being reviewed (case-insensitive)
         if skip_card_name and name.lower() == skip_card_name.lower():
             return name
         for k in card_map:
             if k.lower() == name.lower():
                 url = card_map[k]["url"]
                 ctype = card_map[k]["type"]
-                # Try to get set_name for image URL
-                card_doc = cards.find_one({"card_name": k, "set_name": {"$exists": True}})
-                if card_doc:
-                    set_name = card_doc["set_name"].lower().replace(' ', '-')
-                    card_name = k.lower().replace(' ', '-')
-                    img_url = f"/card-front-images/{set_name}/{card_name}.jpg"
-                else:
-                    img_url = ""
+                # Build image URL for popover
+                set_name = ""
+                card_slug = ""
+                for c in cards.find({"card_name": {"$regex": f"^{k}$", "$options": "i"}}):
+                    set_name = c.get("set_name", "").lower()
+                    card_slug = c.get("card_name", "").lower().replace(' ', '-')
+                    break
+                img_url = f"/card-front-images/{set_name}/{card_slug}.jpg" if set_name and card_slug else ""
                 break
         else:
             url = None
             ctype = ""
             img_url = ""
         if url:
+            # Build a CSS class for every type word, e.g. "Action - Attack" => card-link-action card-link-action-attack
             type_classes = []
             if ctype:
                 for t in re.split(r'[\s\-/]+', ctype):
                     t = t.strip().lower()
                     if t:
+                        # For multiword types, join with dash
                         base = ctype.replace(",", "").replace(" ", "-").replace("/", "-").replace("--", "-").lower()
+                        # Add both the full type and each part for maximum coverage
                         type_classes.append(f"card-link-{base}")
                         type_classes.append(f"card-link-{t}")
             if not type_classes:
                 type_classes = ["card-link-other"]
+            # Fix for Python <3.6: avoid nested braces in f-string
             class_str = ' '.join(type_classes)
-            # Add data-img attribute for popover
-            return '<a href="{}" class="card-link {}" data-img="{}">{}</a>'.format(url, class_str, img_url, name)
+            data_img = f' data-img="{img_url}"' if img_url else ''
+            return f'<a href="{url}" class="card-link {class_str}"{data_img}>{name}</a>'
         return name
     pattern = r'(?<![\w>])(' + '|'.join(re.escape(n) for n in sorted_names) + r')(?![\w<])'
     def link_outside_tags(html):
@@ -345,6 +351,34 @@ def sitemap():
     xml.append('</urlset>')
     return Response('\n'.join(xml), mimetype='application/xml')
 
+@app.route('/unanalyzed')
+def unanalyzed_cards():
+    # Build set of all available images (lowercase, hyphenated)
+    image_files = glob.glob(os.path.join(app.root_path, 'static', 'card-front-images', '*', '*.jpg'))
+    available_images = set()
+    for path in image_files:
+        parts = path.split(os.sep)
+        if len(parts) >= 2:
+            set_name = parts[-2].lower()
+            card_name = os.path.splitext(parts[-1])[0].lower()
+            available_images.add((set_name, card_name))
+
+    def has_image(card):
+        set_name = card.get('set_name', '').lower().replace(' ', '-')
+        card_name = card.get('card_name', '').lower().replace(' ', '-')
+        return (set_name, card_name) in available_images
+
+    # Get cards without strategy reviews but with images
+    unanalyzed_cards = [
+        c for c in cards.find({
+            "card_name": {"$exists": True}, 
+            "set_name": {"$exists": True}, 
+            "strategy_review": {"$exists": False}
+        }) if has_image(c)
+    ]
+    
+    return render_template('unanalyzed.html', unanalyzed_cards=unanalyzed_cards)
+
 if __name__ == '__main__':
-    app.run(port=5711)
+    app.run(debug=True, host='0.0.0.0', port=5000)
 
